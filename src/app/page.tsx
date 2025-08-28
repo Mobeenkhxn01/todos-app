@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function HomePage() {
   const { todos, isLoading, addTodo } = useTodos();
   const [title, setTitle] = useState("");
-  const {  status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -24,14 +24,24 @@ export default function HomePage() {
   }, [status, router]);
 
   if (status === "loading") {
-    return <p className="text-center mt-10">Checking authentication...</p>;
+    return (
+      <p className="text-center mt-10 text-lg text-gray-600 animate-pulse">
+        Checking authentication...
+      </p>
+    );
   }
 
-  if (isLoading) return <p className="text-center mt-10">Loading todos...</p>;
+  if (isLoading)
+    return (
+      <p className="text-center mt-10 text-lg text-gray-600 animate-pulse">
+        Loading todos...
+      </p>
+    );
 
   return (
-    <div className="max-w-md mx-auto mt-10 space-y-6">
-      <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+    <div className="max-w-lg mx-auto mt-10 space-y-8 px-4">
+      {/* Title */}
+      <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent drop-shadow-sm">
         Todo App ✨
       </h1>
       <Toaster />
@@ -42,10 +52,10 @@ export default function HomePage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="What do you need to do?"
-          className="rounded-xl"
+          className="rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-400"
         />
         <Button
-          className="rounded-xl bg-blue-600 hover:bg-blue-700 cursor-pointer"
+          className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 text-white font-semibold shadow-md transition-all duration-200 cursor-pointer"
           onClick={() => {
             if (title.trim()) {
               addTodo.mutate(title, {
@@ -67,8 +77,8 @@ export default function HomePage() {
       </div>
 
       {/* Todo List */}
-      <Card className="shadow-md rounded-2xl">
-        <CardContent className="p-4 space-y-3">
+      <Card className="shadow-xl rounded-2xl border border-gray-100 bg-white/70 backdrop-blur-sm">
+        <CardContent className="p-5 space-y-3">
           <AnimatePresence>
             {todos?.length ? (
               todos.map((todo) => (
@@ -77,15 +87,19 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.25 }}
                 >
                   <TodoItem todo={todo} />
                 </motion.div>
               ))
             ) : (
-              <p className="text-center text-gray-500 py-6">
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center text-gray-500 py-6"
+              >
                 No todos yet 🚀 <br /> Add one above!
-              </p>
+              </motion.p>
             )}
           </AnimatePresence>
         </CardContent>
